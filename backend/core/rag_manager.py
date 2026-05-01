@@ -20,9 +20,19 @@ class RAGManager:
         docs = loader.load()
         chunks = self.text_splitter.split_documents(docs)
         
-        # Başlangıçta FAISS ile kuruyoruz (Hızlı test için)
-        self.vector_store = FAISS.from_documents(chunks, self.embeddings)
-        print(f"📚 {len(docs)} döküman ve {len(chunks)} parça yüklendi.")
+        try:
+            # PGVector kullanarak veritabanına kaydet
+            self.vector_store = PGVector.from_documents(
+                embedding=self.embeddings,
+                documents=chunks,
+                collection_name="finagent_docs",
+                connection_string=settings.DB_URL,
+                pre_delete_collection=True # Her yüklemede temizle
+            )
+            print(f"✅ PGVector: {len(docs)} döküman veritabanına indekslendi.")
+        except Exception as e:
+            print(f"⚠️ PGVector bağlantı hatası, FAISS'e geçiliyor: {e}")
+            self.vector_store = FAISS.from_documents(chunks, self.embeddings)
 
     def add_document(self, file_path: str):
         """Yeni bir dökümanı çalışma anında vektör veritabanına ekler."""
@@ -33,7 +43,7 @@ class RAGManager:
         if self.vector_store:
             self.vector_store.add_documents(chunks)
         else:
-            self.vector_store = FAISS.from_documents(chunks, self.embeddings)
+            self.load_documents("backend/data")
         print(f"🆕 Yeni döküman eklendi: {file_path}")
 
     def query(self, text: str, k: int = 3):
