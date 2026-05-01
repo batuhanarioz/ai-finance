@@ -59,6 +59,29 @@ graph TD
    - **API Metrics**: `http://localhost:8000/metrics`
    - **Grafana Dashboard**: `http://localhost:3001`
 
+## 🎓 Interview & Architecture Deep Dive
+
+This section serves as a study guide for understanding the "Senior" decisions made in this project.
+
+### 1. Why LangGraph instead of simple LangChain?
+- **State Management**: Simple chains are stateless. LangGraph allows for a persistent `AgentState`, enabling agents to "remember" previous steps in a complex workflow.
+- **Cycles & Loops**: Real-world banking requires retries and corrections (e.g., if the Risk Officer rejects a transaction, we loop back to the user or banker). LangGraph handles these cyclic graphs natively.
+- **Supervisor Pattern**: Instead of one giant prompt, we use a "Router" (Supervisor) to delegate tasks. This reduces "LLM distraction" and improves tool-calling accuracy.
+
+### 2. The RAGAS Evaluation Strategy
+- **Faithfulness**: Measures if the answer is derived *solely* from the retrieved context. (Crucial for preventing hallucinations in banking).
+- **Answer Relevance**: Ensures the AI actually addresses the user's query rather than giving generic info.
+- **Context Precision**: Evaluates if the most relevant information is at the top of the search results (optimizing `pgvector` performance).
+
+### 3. Observability & Monitoring (The "SRE" Side)
+- **Prometheus**: Tracks system-level metrics like `request_latency_seconds`. In an interview, you can explain how this helps monitor the "cost vs speed" trade-off of different LLM models.
+- **Grafana**: Provides the visual proof of system health, crucial for enterprise stakeholders.
+- **Thought Diaries**: This isn't just a UI feature; it's a "Traceability" requirement. It shows exactly which agent made which decision at what time.
+
+### 4. Enterprise Security Guardrails
+- **PII Masking**: We use regex-based and LLM-based masking to ensure data like IBANs or Phone Numbers don't leak into the model's training logs or third-party providers.
+- **Prompt Injection Defense**: By using a structured `BaseModel` for chat requests and a Supervisor node, we limit the user's ability to "break" the agent logic.
+
 ## 📊 Evaluation (RAGAS)
 Run the evaluation suite to measure system performance:
 ```bash
