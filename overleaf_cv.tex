@@ -1,0 +1,136 @@
+%-------------------------
+% Resume in Latex - Batuhan ARIÖZ
+% Final Optimized Version: Full-stack AI Product Engineer
+%------------------------
+
+\documentclass[a4paper,11pt]{article}
+
+%---- Required Packages ----
+\usepackage{latexsym}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{ragged2e}
+\usepackage[empty]{fullpage}
+\usepackage{wrapfig}
+\usepackage{tabularx}
+\usepackage{titlesec}
+\usepackage{geometry}
+\usepackage{marvosym}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage{fontawesome5}
+\usepackage{multicol}
+\usepackage{graphicx}
+\usepackage{cfr-lm}
+\usepackage[T1]{fontenc}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\geometry{left=1.4cm, top=0.5cm, right=1.2cm, bottom=0.5cm}
+
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Section formatting
+\titleformat{\section}{
+  \vspace{-4pt}\scshape\bfseries\raggedright\large
+}{}{0em}{}[\vspace{0pt}\color{black}\titlerule \vspace{-5pt}]
+
+% Simple list helpers
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=*, label={}, nosep, topsep=0pt, partopsep=0pt, parsep=0pt]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}\vspace{-2mm}}
+
+%-------------------------------------------
+% CV START
+\newcommand{\name}{Batuhan ARIÖZ}
+\newcommand{\phone}{+90 544 441 21 80}
+\newcommand{\emaila}{ariozbatuhan@gmail.com}
+
+\begin{document}
+
+%---------- HEADER ----------
+{
+\begin{tabularx}{\linewidth}{@{}X r@{}}
+  \textbf{\Large \name} & Phone: \href{tel:+905444412180}{\phone} \\
+  \textbf{Full Stack Engineer | AI Systems} & Email: \href{mailto:\emaila}{\emaila} \\
+  İzmir / Ankara, Turkey & LinkedIn: \href{https://www.linkedin.com/in/batuhanarioz/}{linkedin.com/in/batuhanarioz} \\
+   & GitHub: \href{https://github.com/batuhanarioz}{github.com/batuhanarioz} \\
+   & Portfolio: \href{https://batuhanarioz.vercel.app}{batuhanarioz.vercel.app} \\
+\end{tabularx}
+}
+
+%----------- SUMMARY ----------
+\section{\textbf{SUMMARY}}
+\noindent Full Stack Engineer specializing in building production-grade SaaS systems and data-intensive architectures using Node.js, Next.js, and PostgreSQL. 
+
+\noindent Focused on designing AI-powered systems --- including RAG pipelines, agent-based workflows, and automation platforms --- integrated into production systems and real-world applications.
+
+\noindent Experienced in event-driven architectures and scalable backend systems; built and deployed solutions handling thousands of daily operations across multi-client environments.
+
+%----------- SKILLS ----------
+\section{\textbf{SKILLS}}
+\begin{itemize}[leftmargin=0.05in, label={}]
+\small{\item{
+\textbf{Backend \& APIs:} Node.js (Express), Python (FastAPI), TypeScript, REST API Design, Webhooks, JWT/RBAC \\
+\textbf{AI \& Data Systems:} OpenAI API, RAG Systems, Vector Search (pgvector), Semantic Search, Agentic Workflows \\
+\textbf{Data \& Infrastructure:} PostgreSQL, Supabase, Redis, MongoDB, RabbitMQ, Event-driven Architecture \\
+\textbf{Systems Design:} Microservices, Saga Pattern, Outbox Pattern, Circuit Breakers, Distributed Systems \\
+\textbf{DevOps \& Observability:} Docker, CI/CD, Sentry, Monitoring, Distributed Tracing \\
+\textbf{Languages:} English (C1), Turkish (Native)
+}}
+\end{itemize}
+
+%----------- WORK EXPERIENCE ----------
+\section{\textbf{EXPERIENCE}}
+\resumeSubHeadingListStart
+
+  \item \textbf{AI Systems Engineer — NextGency} \hfill 2025--2026 \\
+  \textit{AI Automation \& SaaS Systems}
+  \begin{itemize}[leftmargin=2ex, noitemsep, topsep=0pt, parsep=0pt, partopsep=0pt]
+    \item Designed and deployed event-driven AI-powered systems using Node.js, REST APIs, and event-driven integrations, reducing manual workloads by 40--70\% for enterprise clients.
+    \item Built and integrated LLM-based workflows (classification, reasoning agents) into backend services, significantly improving response latency and automation accuracy.
+    \item Architected end-to-end AI pipelines using async processing patterns (queue-based workflows, webhooks, event-driven systems) and led system design and architecture decisions for enterprise projects.
+  \end{itemize}\vspace{-2pt}
+
+  \item \textbf{Software Engineer — Independent} \hfill 2021--2025 \\
+  \textit{Product-based Engineering}
+  \begin{itemize}[leftmargin=2ex, noitemsep, topsep=0pt, parsep=0pt, partopsep=0pt]
+    \item Started with frontend and mobile development (iOS/SwiftUI), building user-facing applications with a strong focus on UI/UX and product experience.
+    \item Evolved into full-stack development, designing and building SaaS systems with backend integrations and real-time data synchronization.
+    \item Built and scaled production systems, including a healthcare platform integrating 10+ legacy systems across real-time environments.
+  \end{itemize}\vspace{-2pt}
+
+\resumeSubHeadingListEnd
+
+%----------- PROJECTS ----------
+\section{\textbf{PROJECTS}}
+\resumeSubHeadingListStart
+
+\item \textbf{Healthcare Platform (Dental SaaS)} (Next.js, Node.js, PostgreSQL) \hfill \href{https://clinic.nextgency360.com/}{\color{blue!70!black}clinic.nextgency360.com \faExternalLink*} \\
+Engineered a production-grade multi-tenant SaaS platform for healthcare operations, managing end-to-end clinic workflows (patient records, complex scheduling, and billing).
+\item \textbf{→} Orchestrated automated reporting and notification pipelines reducing administrative manual workload by 70\%.
+\item \textbf{→} Implemented secure, real-time data synchronization layers handling concurrent multi-clinic operations.
+
+\item \textbf{FinAgent: Autonomous Multi-Agent Banking Framework} (LangGraph, FastAPI, ragas) \hfill \href{https://github.com/batuhanarioz/finagent}{\color{blue!70!black}github.com/batuhanarioz/finagent \faExternalLink*} \\
+Architected a modular semantic search engine and multi-agent system for complex financial operations using LangGraph.
+\item \textbf{→} Engineered ingestion \& indexing pipelines with hybrid search (semantic + keyword) and streaming RAG (SSE).
+\item \textbf{→} Implemented an automated evaluation suite using RAGAS, achieving 90\%+ scores in faithfulness and relevance.
+\item \textbf{→} Secured AI workflows with PII data masking, SQLi/XSS guardrails, and real-time Prometheus/Grafana monitoring.
+
+\item \textbf{Distributed Microservices Architecture} (Node.js, RabbitMQ) \hfill \href{https://batuhan-ecosystem.vercel.app/}{\color{blue!70!black}batuhan-ecosystem.vercel.app \faExternalLink*} \\
+Architected a resilient event-driven ecosystem implementing Saga (Choreography) and Transactional Outbox patterns.
+\item \textbf{→} Guaranteed distributed data integrity and eventual consistency in high-availability, failure-prone environments.
+\item \textbf{→} Integrated Circuit Breakers to mitigate cascading failures and built a simulator to visualize system resilience.
+
+\resumeSubHeadingListEnd
+
+%----------- EDUCATION ----------
+\section{\textbf{EDUCATION}}
+\resumeSubHeadingListStart
+  \item \textbf{Hacettepe University} --- B.Sc. Electrical and Electronics Engineering \hfill 2018--2024
+\resumeSubHeadingListEnd
+
+\end{document}

@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+.next/
+out/
+build/
+dist/
+
+# Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+backend/.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+.pytest_cache/
+
+# Databases
+postgres_data/
+*.db
+*.sqlite3
+
+# Logs
+*.log
+backend/data/*.jsonl
+backend/data/eval_report.json
+
+# IDEs
+.vscode/
+.idea/
+.DS_Store
+
+# Docker
+.docker/
+
+# AI Assistant
+.gemini/
+.antigravity/
