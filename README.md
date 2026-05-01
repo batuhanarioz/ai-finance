@@ -59,28 +59,46 @@ graph TD
    - **API Metrics**: `http://localhost:8000/metrics`
    - **Grafana Dashboard**: `http://localhost:3001`
 
-## 🎓 Interview & Architecture Deep Dive
+## 🏗️ Architecture Deep Dive
 
-This section serves as a study guide for understanding the "Senior" decisions made in this project.
+This section provides an exhaustive technical analysis of the FinAgent ecosystem, covering design patterns, data flow, and security infrastructure.
 
-### 1. Why LangGraph instead of simple LangChain?
-- **State Management**: Simple chains are stateless. LangGraph allows for a persistent `AgentState`, enabling agents to "remember" previous steps in a complex workflow.
-- **Cycles & Loops**: Real-world banking requires retries and corrections (e.g., if the Risk Officer rejects a transaction, we loop back to the user or banker). LangGraph handles these cyclic graphs natively.
-- **Supervisor Pattern**: Instead of one giant prompt, we use a "Router" (Supervisor) to delegate tasks. This reduces "LLM distraction" and improves tool-calling accuracy.
+### 1. Advanced Agent Orchestration (LangGraph)
+Unlike linear LLM chains, FinAgent uses a **Directed Acyclic Graph (DAG)** with cyclic capabilities to manage complex workflows:
+- **Stateful Management**: The `AgentState` object persists across node transitions, holding message history, user context (ID, credit score), and internal flags (e.g., `is_risk_cleared`).
+- **Supervisor Pattern**: A central `supervisor_node` acts as an intelligent router. It uses an LLM to analyze the intent and dispatch the task to specialized nodes, reducing "noise" and improving tool-calling reliability.
+- **Node Specialization**:
+  - **Banker**: Focused on tool execution (transfers, balance checks).
+  - **Risk Officer**: Statistically analyzes transaction risks.
+  - **Product Expert**: Performs RAG searches for banking knowledge.
 
-### 2. The RAGAS Evaluation Strategy
-- **Faithfulness**: Measures if the answer is derived *solely* from the retrieved context. (Crucial for preventing hallucinations in banking).
-- **Answer Relevance**: Ensures the AI actually addresses the user's query rather than giving generic info.
-- **Context Precision**: Evaluates if the most relevant information is at the top of the search results (optimizing `pgvector` performance).
+### 2. Model Context Protocol (MCP) & Tooling
+The system uses `fastmcp` to expose banking functions as tools. 
+- **Decoupling**: The core banking logic is isolated in a separate MCP server, simulating a real-world legacy banking API.
+- **Dynamic Selection**: The AI Banker doesn't just "run" a tool; it decides *which* tool to use based on the tool's docstrings, showcasing the model's reasoning capabilities.
 
-### 3. Observability & Monitoring (The "SRE" Side)
-- **Prometheus**: Tracks system-level metrics like `request_latency_seconds`. In an interview, you can explain how this helps monitor the "cost vs speed" trade-off of different LLM models.
-- **Grafana**: Provides the visual proof of system health, crucial for enterprise stakeholders.
-- **Thought Diaries**: This isn't just a UI feature; it's a "Traceability" requirement. It shows exactly which agent made which decision at what time.
+### 3. RAG Infrastructure (pgvector)
+We chose **PostgreSQL with pgvector** over specialized vector databases (like Pinecone) for several reasons:
+- **ACID Compliance**: Ensuring financial data integrity alongside vector embeddings.
+- **Hybrid Queries**: Allows for joining relational data (user accounts) with unstructured data (product docs) in a single SQL query.
+- **Semantic Search**: Implemented via `SentenceTransformer` embeddings, providing high-relevance retrieval for product inquiries.
 
-### 4. Enterprise Security Guardrails
-- **PII Masking**: We use regex-based and LLM-based masking to ensure data like IBANs or Phone Numbers don't leak into the model's training logs or third-party providers.
-- **Prompt Injection Defense**: By using a structured `BaseModel` for chat requests and a Supervisor node, we limit the user's ability to "break" the agent logic.
+### 4. 3-Layer Security Guardrails
+FinAgent implements a defense-in-depth strategy:
+1. **PII Masking**: A regex + LLM hybrid layer that redacts IBANs, phone numbers, and emails before they are processed by external LLMs.
+2. **Input Validation**: Hardened against Prompt Injection, SQLi, and XSS through structured Pydantic models and input sanitization.
+3. **Audit Trails**: Every node transition and AI decision is serialized into `audit_logs.jsonl`, providing a 100% transparent history for compliance.
+
+### 5. Observability & SRE Stack
+- **Prometheus**: Automatically instruments FastAPI endpoints to track `http_request_duration_seconds` and `http_requests_total`.
+- **Grafana**: Visualizes system health, agent latency, and security event frequency.
+- **Streaming SSE**: The frontend uses Server-Sent Events to stream "AI Thoughts" in real-time, providing a high-fidelity look into the agent's internal reasoning process.
+
+### 6. Automated Evaluation (RAGAS)
+To move beyond "vibe-based" testing, we use the RAGAS framework:
+- **Faithfulness**: How much of the answer is grounded in the provided context?
+- **Answer Relevance**: How well does the answer address the actual user query?
+- **Context Precision**: Is the retrieved context actually useful for the answer?
 
 ## 📊 Evaluation (RAGAS)
 Run the evaluation suite to measure system performance:
